@@ -12,7 +12,7 @@ function downloadImage(url) {
   });
 }
 
-function downloadImages(imageUrls) {
+function downloadImages(images) {
   const loadingDiv = document.getElementById('loading');
   const outputDiv = document.getElementById('output');
   const errorDiv = document.getElementById('error');
@@ -24,7 +24,7 @@ function downloadImages(imageUrls) {
   errorDiv.innerHTML = '';
 
   // Start downloading images
-  Promise.all(imageUrls.map(url => downloadImage(url)))
+  Promise.all(images.map(url => downloadImage(url)))
     .then(images => {
       loadingDiv.style.display = 'none'; // Hide loading spinner
       
@@ -39,4 +39,4 @@ function downloadImages(imageUrls) {
 }
 
 // Trigger the image download
-downloadImages(imageUrls);
+downloadImages(images);
