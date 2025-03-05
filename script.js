@@ -1,25 +1,43 @@
-const output = document.getElementById('output');
+const imageUrls = [
+  'https://via.placeholder.com/150/92c952',
+  'https://via.placeholder.com/150/771796',
+  'https://via.placeholder.com/150/24f355'
+];
 
-let arr = [1, 2, 3, 4];
+function downloadImage(url) {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.src = url;
+    img.onload = () => resolve(img);
+    img.onerror = () => reject(new Error(`Failed to load image from ${url}`));
+  });
+}
 
-let p1 = new Promise((resolve) => 
-    setTimeout(() => {
-        resolve(arr);
-    }, 3000)
-).then((arr) => {
-    return new Promise((resolve) => {
-        const filteredResult = arr.filter((value) => value % 2 === 0);
-        setTimeout(() => {
-            output.innerHTML + = `Filtered Result: ${filteredResult}`;
-            resolve(filteredResult);
-        }, 1000);
-    });
-}).then((filteredResult) => {
-    return new Promise((resolve) => {
-        const multipliedResult = filteredResult.map((value) => value * 2);
-        setTimeout(() => {
-            output.innerHTML+ = `Multiplied Result: ${multipliedResult}`;
-            resolve(multipliedResult);
-        }, 2000);
-    });
-})
+function downloadImages(imageUrls) {
+  const loadingDiv = document.getElementById('loading');
+  const outputDiv = document.getElementById('output');
+  const errorDiv = document.getElementById('error');
+
+  loadingDiv.style.display = 'block'; //
+  
+  // Clear previous content
+  outputDiv.innerHTML = '';
+  errorDiv.innerHTML = '';
+
+  // Start downloading images
+  Promise.all(imageUrls.map(url => downloadImage(url)))
+    .then(images => {
+      loadingDiv.style.display = 'none'; // Hide loading spinner
+      
+      // Append each image to the output div
+      images.forEach(img => {
+        outputDiv.appendChild(img);
+      });
+    })
+    .catch(error => {
+      loadingDiv.style.display = 'none'; 
+      errorDiv.innerHTML = `Error: ${error.message}`; 
+}
+
+// Trigger the image download
+downloadImages(imageUrls);
